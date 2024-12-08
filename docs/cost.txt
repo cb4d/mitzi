@@ -1,0 +1,12 @@
+How much is aws going to cost for this project?
+
+a 100% jpeg for a 12MP camera is approx 3.6MB. let's call that 4...
+
+a pic every 10 mins for an hour = 6 pics, 24MB
+every 10 mins for 12 hrs = 72 pics, 288MB
+28 days of 12 hrs of 6 pics per hr = 2016 pics, 8064MB
+
+
+s3 standard : storage 0.023 /GB/month, think data out is gonna be free for cloudfront, 0.09 /GB/month for a download
+
+so like a dollar a month to store? will need to keep an eye on cost i guess

@@ -1,0 +1,36 @@
+# Mitzi: An automated web/dash-cam for priscilla.
+
+- Turn Mitzi on and she'll take photos periodically which are uploaded to the cloud
+- Photos can be viewed via a password-protected public link
+
+Ideally with geotagging - maybe next iteration.
+
+## Implementation:
+
+### Front end
+
+A rpi zero 2 w and camera module. Some kind of casing that allow for mounting in the cabin,
+and maybe for powering via battery?
+
+Should be able to turn it on and it just starts working.
+Ideally with the most minimal config possible - just a wifi password?
+
+The rest of config could come via something like s3.
+
+Something like systemd services to:
+- reads a remote config or falls back to local default config
+- take a picture every interval and store indexed by timestamp - will require accurate time
+- upload unuploaded pics to s3
+- prune local storage on a regular interval
+
+### Back end
+
+Should be as cheap and easy to run as possble.
+
+is this afforadble?
+Photos stored in S3 with some kind of automated archiving to keep storage costs low
+retention will probably depend on cost, but could be something like every 10 mins for last hr, every hr for last day, every 3h for last week.
+ideally older stuff would get archived v v cheaply
+
+Static gallery site to view all photos, in date descending order, as a carousel, maybe with a date search??
+
