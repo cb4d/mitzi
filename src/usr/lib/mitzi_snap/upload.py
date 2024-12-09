@@ -57,12 +57,16 @@ def upload_queued_photos():
     log.debug("upload_queued_photos")
 
     enabled, base_dir, = read_config(
-        ("take_photo", "enabled"),
+        ("upload_photos", "enabled"),
         ("take_photo", "base_dir"),
     )
 
-    for rel_f in os.listdir(base_dir / "queued"):
-        queued_file = base_dir / "queued" / rel_f
+    if not enabled:
+        log.info("skipping upload_queued_photos: step not enabled")
+        return
 
-        if upload_file_to_s3(queued_file):
-            os.rename(queued_file, base_dir / "uploaded" / rel_f)
+    for rel_f in os.listdir(os.path.join(base_dir, "queued")):
+        queued_file = os.path.join(base_dir, "queued", rel_f)
+
+        if upload_file_to_s3(queued_file, "uploads"):
+            os.rename(queued_file, os.path.join(base_dir, "uploaded", rel_f))

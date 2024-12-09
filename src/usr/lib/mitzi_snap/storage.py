@@ -1,5 +1,6 @@
 import logging
 import os
+from pathlib import Path
 
 from .config import read_config
 
@@ -11,11 +12,10 @@ def prepare():
 
     base_dir, = read_config(("take_photo", "base_dir"))
 
-    dir_scan = os.scandir(base_dir)
-    if not dir_scan.is_dir():
+    if not os.path.isdir(base_dir):
         log.debug(f"making photos dirs at {base_dir}")
-        os.makedirs(base_dir / "queued")
-        os.makedirs(base_dir / "uploaded")
+        os.makedirs(os.path.join(base_dir, "queued"))
+        os.makedirs(os.path.join(base_dir, "uploaded"))
 
 
 def space_available() -> bool:
@@ -24,11 +24,14 @@ def space_available() -> bool:
         ("take_photo", "max_dir_size_mb")
     )
 
-    dir_scan = os.scandir(base_dir)
-    dir_current_size = dir_scan.stat().st_size / (1024 * 1024)
+    dir_current_size_mb = sum(
+        os.path.getsize(os.path.join(dirpath,filename))
+        for dirpath, dirnames, filenames in os.walk(base_dir)
+        for filename in filenames
+    ) / (1024 * 1024)
 
-    log.debug(f"max_dir_size_mb = {max_dir_size_mb}, dir_current_size = {dir_current_size}")
-    return dir_current_size >= max_dir_size_mb
+    log.debug(f"max_dir_size_mb = {max_dir_size_mb}, dir_current_size_mb = {dir_current_size_mb}")
+    return dir_current_size_mb <= max_dir_size_mb
 
 
 def tidy():
@@ -46,18 +49,22 @@ def tidy():
         return
 
     def need_to_tidy():
-        dir_scan = os.scandir(base_dir)
-        dir_current_size_mb = dir_scan.stat().st_size / (1024 * 1024)
+        dir_current_size_mb = sum(
+            os.path.getsize(os.path.join(dirpath,filename))
+            for dirpath, dirnames, filenames in os.walk(base_dir)
+            for filename in filenames
+        ) / (1024 * 1024)
+
         return dir_current_size_mb >= max_dir_size_mb - headroom_mb
 
     while need_to_tidy():
-        if len(os.listdir(base_dir / 'uploaded')):
-            chosen_dir = base_dir / 'uploaded'
-        elif len(os.listdir(base_dir / 'queued')):
-            chosen_dir = base_dir / 'queued'
+        if len(os.listdir(os.path.join(base_dir, 'uploaded'))):
+            chosen_dir = os.path.join(base_dir, 'uploaded')
+        elif len(os.listdir(os.path.join(base_dir, 'queued'))):
+            chosen_dir = os.path.join(base_dir, 'queued')
         else:
             break
 
-        files = [chosen_dir / f for f in os.listdir(chosen_dir)]
+        files = [os.path.join(chosen_dir, f) for f in os.listdir(chosen_dir)]
         oldest_file = min(files, key=os.path.getctime)
         os.remove(oldest_file)
