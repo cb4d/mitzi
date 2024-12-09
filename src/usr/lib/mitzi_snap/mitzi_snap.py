@@ -14,7 +14,7 @@ log = logging.getLogger(__name__)
 def sleep_or_exit():
     log.debug("sleep_or_exit")
 
-    interval_mins = read_config(("mitzi", "interval_mins"))
+    interval_mins, = read_config(("mitzi", "interval_mins"))
 
     if interval_mins == 0:
         log.info("exiting: interval_mins=0")

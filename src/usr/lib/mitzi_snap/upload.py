@@ -23,7 +23,7 @@ def upload_file_to_s3(file_name: str, bucket: str, object_name=None) -> bool:
     if object_name is None:
         object_name = os.path.basename(file_name)
 
-    aws_region, aws_access_key_id, aws_secret_key, aws_session_token = read_config(
+    aws_region, aws_access_key_id, aws_secret_key, aws_session_token, = read_config(
         ("aws", "region"),
         ("aws", "access_key_id"),
         ("aws", "secret_access_key"),
@@ -56,7 +56,7 @@ def upload_file_to_s3(file_name: str, bucket: str, object_name=None) -> bool:
 def upload_queued_photos():
     log.debug("upload_queued_photos")
 
-    enabled, base_dir = read_config(
+    enabled, base_dir, = read_config(
         ("take_photo", "enabled"),
         ("take_photo", "base_dir"),
     )

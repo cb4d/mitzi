@@ -12,7 +12,7 @@ log = logging.getLogger(__name__)
 def take_photo():
     log.debug("take_photo")
 
-    enabled, base_dir, max_dir_size_mb = read_config(
+    enabled, base_dir, max_dir_size_mb, = read_config(
         ("take_photo", "enabled"),
         ("take_photo", "base_dir"),
         ("take_photo", "max_dir_size_mb")

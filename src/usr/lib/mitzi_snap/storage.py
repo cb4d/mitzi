@@ -9,7 +9,7 @@ log = logging.getLogger(__name__)
 def prepare():
     log.debug("prepare storage")
 
-    base_dir = read_config(("take_photo", "base_dir"))
+    base_dir, = read_config(("take_photo", "base_dir"))
 
     dir_scan = os.scandir(base_dir)
     if not dir_scan.is_dir():
@@ -19,7 +19,7 @@ def prepare():
 
 
 def space_available() -> bool:
-    base_dir, max_dir_size_mb = read_config(
+    base_dir, max_dir_size_mb, = read_config(
         ("take_photo", "base_dir"),
         ("take_photo", "max_dir_size_mb")
     )
@@ -34,7 +34,7 @@ def space_available() -> bool:
 def tidy():
     log.debug("tidy storage")
 
-    enabled, headroom_mb, base_dir, max_dir_size_mb = read_config(
+    enabled, headroom_mb, base_dir, max_dir_size_mb, = read_config(
         ("tidy_storage", "enabled"),
         ("tidy_storage", "headroom_mb"),
         ("take_photo", "base_dir"),
