@@ -61,7 +61,7 @@ def upload_queued_photos():
         ("take_photo", "base_dir"),
     )
 
-    if not enabled:
+    if not enabled == True:
         log.info("skipping upload_queued_photos: step not enabled")
         return
 

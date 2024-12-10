@@ -31,7 +31,7 @@ def space_available() -> bool:
     ) / (1024 * 1024)
 
     log.debug(f"max_dir_size_mb = {max_dir_size_mb}, dir_current_size_mb = {dir_current_size_mb}")
-    return dir_current_size_mb <= max_dir_size_mb
+    return dir_current_size_mb <= int(max_dir_size_mb)
 
 
 def tidy():
@@ -44,7 +44,7 @@ def tidy():
         ("take_photo", "max_dir_size_mb")
     )
 
-    if not enabled:
+    if not enabled == "True":
         log.info("skipping tidy_storage: step not enabled")
         return
 
@@ -55,7 +55,7 @@ def tidy():
             for filename in filenames
         ) / (1024 * 1024)
 
-        return dir_current_size_mb >= max_dir_size_mb - headroom_mb
+        return dir_current_size_mb >= int(max_dir_size_mb) - int(headroom_mb)
 
     while need_to_tidy():
         if len(os.listdir(os.path.join(base_dir, 'uploaded'))):

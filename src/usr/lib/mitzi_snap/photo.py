@@ -14,13 +14,12 @@ picam2 = Picamera2()
 def take_photo():
     log.debug("take_photo")
 
-    enabled, base_dir, max_dir_size_mb, = read_config(
+    enabled, base_dir, = read_config(
         ("take_photo", "enabled"),
         ("take_photo", "base_dir"),
-        ("take_photo", "max_dir_size_mb")
     )
 
-    if not enabled:
+    if not enabled == "True":
         log.info("skipping take_photo: step not enabled")
         return
 

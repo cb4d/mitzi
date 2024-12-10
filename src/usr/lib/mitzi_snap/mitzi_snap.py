@@ -16,12 +16,12 @@ def sleep_or_exit():
 
     interval_mins, = read_config(("mitzi", "interval_mins"))
 
-    if interval_mins == 0:
+    if int(interval_mins) == 0:
         log.info("exiting: interval_mins=0")
         exit(0)
     else:
         log.debug(f"sleeping for interval_mins={interval_mins}")
-        time.sleep(60 * interval_mins)
+        time.sleep(60 * int(interval_mins))
 
 
 if __name__ == "__main__":
