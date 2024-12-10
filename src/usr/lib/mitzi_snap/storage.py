@@ -67,4 +67,5 @@ def tidy():
 
         files = [os.path.join(chosen_dir, f) for f in os.listdir(chosen_dir)]
         oldest_file = min(files, key=os.path.getctime)
+        log.info(f"tidy_storage: removing {oldest_file}")
         os.remove(oldest_file)
