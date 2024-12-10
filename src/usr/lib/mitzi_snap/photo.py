@@ -27,7 +27,7 @@ def take_photo():
         log.info("skipping take_photo: insufficient space")
         return
 
-    now = datetime.datetime.now(datetime.timezone.utc).time()
+    now = datetime.datetime.now(datetime.timezone.utc)
 
     filename = f"mitzi-snap-{now.isoformat()}.jpg"
 
