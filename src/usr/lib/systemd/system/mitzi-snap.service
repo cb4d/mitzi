@@ -1,0 +1,13 @@
+[Unit]
+Description=timelapse photos
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+Type=simple
+Restart=on-failure
+User=root
+ExecStart=/bin/bash -c 'cd /home/connor/mitzi/ && make run'
+
+[Install]
+WantedBy=multi-user.target
