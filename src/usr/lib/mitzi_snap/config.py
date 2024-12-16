@@ -8,12 +8,6 @@ default_config = {
     "mitzi": {
         "interval_mins": 0,
     },
-    "aws": {
-        "access_key_id": "",
-        "secret_access_key": "",
-        "session_token": "",
-        "region": "eu-west-1",
-    },
     "take_photo": {
         "enabled": True,
         "base_dir": "/var/lib/mitzi-snap/photos",
@@ -26,6 +20,12 @@ default_config = {
         "enabled": True,
         "headroom_mb": 5
     },
+    "aws": {
+        "access_key_id": "",
+        "secret_access_key": "",
+        "region": "eu-west-1",
+        "bucket_name": "",
+    },
 }
 
 config = configparser.ConfigParser()
@@ -35,6 +35,8 @@ def load_config():
     log.debug("load_config")
 
     global config
+    
+    config.read_file(open("/etc/mitzi-snap-aws.conf", "r"))
 
     try:
         config.read_file(open("/etc/mitzi-snap.conf", "r"))
@@ -44,7 +46,7 @@ def load_config():
         config.read_dict(default_config)
 
     log.debug(
-        "loaded config:" + str({section: dict(config[section]) for section in config.sections()})
+        "loaded config:" + str({section: dict(config[section]) for section in config.sections() if section != "aws"})
     )
     # todo: load in aws creds/config from file
 
