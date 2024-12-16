@@ -23,11 +23,10 @@ def upload_file_to_s3(file_name: str, bucket: str, object_name=None) -> bool:
     if object_name is None:
         object_name = os.path.basename(file_name)
 
-    aws_region, aws_access_key_id, aws_secret_key, aws_session_token, = read_config(
+    aws_region, aws_access_key_id, aws_secret_key, = read_config(
         ("aws", "region"),
         ("aws", "access_key_id"),
         ("aws", "secret_access_key"),
-        ("aws", "session_token"),
     )
 
     # Build client
@@ -38,7 +37,6 @@ def upload_file_to_s3(file_name: str, bucket: str, object_name=None) -> bool:
         's3',
         aws_access_key_id=aws_access_key_id,
         aws_secret_access_key=aws_secret_key,
-        aws_session_token=aws_session_token,
         config=config
     )
 
@@ -56,17 +54,18 @@ def upload_file_to_s3(file_name: str, bucket: str, object_name=None) -> bool:
 def upload_queued_photos():
     log.debug("upload_queued_photos")
 
-    enabled, base_dir, = read_config(
+    enabled, base_dir, aws_bucket_name, = read_config(
         ("upload_photos", "enabled"),
         ("take_photo", "base_dir"),
+        ("aws", "bucket_name"),
     )
 
-    if not enabled == True:
+    if not enabled == "True":
         log.info("skipping upload_queued_photos: step not enabled")
         return
 
     for rel_f in os.listdir(os.path.join(base_dir, "queued")):
         queued_file = os.path.join(base_dir, "queued", rel_f)
 
-        if upload_file_to_s3(queued_file, "uploads"):
+        if upload_file_to_s3(queued_file, aws_bucket_name, f"uploads/{rel_f}"):
             os.rename(queued_file, os.path.join(base_dir, "uploaded", rel_f))
