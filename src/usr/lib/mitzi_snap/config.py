@@ -12,6 +12,7 @@ default_config = {
         "enabled": True,
         "base_dir": "/var/lib/mitzi-snap/photos",
         "max_dir_size_mb": 20,
+        "rotation": 0,
     },
     "upload_photos": {
         "enabled": False,
@@ -38,6 +39,7 @@ def load_config():
     
     config.read_file(open("/etc/mitzi-snap-aws.conf", "r"))
 
+    # todo: load in config from aws before local fallback
     try:
         config.read_file(open("/etc/mitzi-snap.conf", "r"))
     except Exception as e:
@@ -48,7 +50,6 @@ def load_config():
     log.debug(
         "loaded config:" + str({section: dict(config[section]) for section in config.sections() if section != "aws"})
     )
-    # todo: load in aws creds/config from file
 
 
 def read_config(*keys: (str, str)) -> [str]:
